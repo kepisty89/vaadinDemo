@@ -5,10 +5,16 @@ package com.example.vaadindemo.domain;
  */
 public class Car {
 	
-	private String make = "Unknown";	// i.e.: Honda
-	private String model = "Unknown";	// i.e.: Civic
-	private int yop = 1977;				// Year of production.
+	/*
+	 * Fields.
+	 */	
+	private String make;	// i.e.: Honda
+	private String model;	// i.e.: Civic
+	private int yop;				// Year of production.
 	
+	/*
+	 * Constructors.
+	 */
 	public Car(String make, String model, int yop){
 		this.setMake(make);
 		this.setModel(model);
@@ -17,8 +23,12 @@ public class Car {
 	
 	public Car()
 	{		
+		
 	}
 	
+	/*
+	 * Properties.
+	 */
 	public String getMake() {
 		return make;
 	}
@@ -43,6 +53,9 @@ public class Car {
 		this.yop = yop;
 	}
 	
+	/*
+	 * Public methods.
+	 */	
 	public String toString()
 	{
 		return getMake() + " " 

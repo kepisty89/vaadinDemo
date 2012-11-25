@@ -2,20 +2,31 @@ package com.example.vaadindemo.domain;
 
 public class Person {
 	
+	/*
+	 * Fields.
+	 */
 	private String firstName = "unknown first name";
 	private String lastName = "unknown last name";
-	private int yob = 1980;
-	
+	private int birthYear = 1980;
+	private Car car = null;
+
+	/*
+	 * Constructors.
+	 */
 	public Person() {
 	}
 
-	public Person(String firstName, String lastName, int yob) {
+	public Person(String firstName, String lastName, int birthYear, Car car) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.yob = yob;
+		this.birthYear = birthYear;
+		this.setCar(car);				
 	}
 
+	/*
+	 * Properties.
+	 */
 	public String getFirstName() {
 		return firstName;
 	}
@@ -32,14 +43,25 @@ public class Person {
 		this.lastName = lastName;
 	}
 
-	public int getYob() {
-		return yob;
+	public int getbirthYear() {
+		return birthYear;
 	}
 
-	public void setYob(int yob) {
-		this.yob = yob;
+	public void setbirthYear(int birthYear) {
+		this.birthYear = birthYear;
 	}
 
+	public Car getCar() {
+		return car;
+	}
+
+	public void setCar(Car car) {
+		this.car = car;
+	}
+	
+	/*
+	 * Public methods.
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -48,7 +70,7 @@ public class Person {
 				+ ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result
 				+ ((lastName == null) ? 0 : lastName.hashCode());
-		result = prime * result + yob;
+		result = prime * result + birthYear;
 		return result;
 	}
 
@@ -56,11 +78,15 @@ public class Person {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
+		
 		if (obj == null)
 			return false;
+		
 		if (getClass() != obj.getClass())
 			return false;
+		
 		Person other = (Person) obj;
+		
 		if (firstName == null) {
 			if (other.firstName != null)
 				return false;
@@ -71,8 +97,10 @@ public class Person {
 				return false;
 		} else if (!lastName.equals(other.lastName))
 			return false;
-		if (yob != other.yob)
+		
+		if (birthYear != other.birthYear)
 			return false;
+		
 		return true;
 	}
 }
