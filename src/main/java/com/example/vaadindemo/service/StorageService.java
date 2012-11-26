@@ -1,6 +1,8 @@
 package com.example.vaadindemo.service;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 
 import com.example.vaadindemo.domain.Car;
@@ -15,6 +17,8 @@ public class StorageService {
 	private List<Person> personDb = new ArrayList<Person>();	
 	private List<Car> carDb = new ArrayList<Car>();
 	private List<Note> noteDb = new ArrayList<Note>();
+	
+	private Dictionary<Car, Person> CarPersonDict = new Hashtable<Car, Person>();
 
 	/*
 	 * Public methods for Person.
@@ -99,7 +103,31 @@ public class StorageService {
 
     public List<Car> getAllNotes(){
     	return this.carDb;
-    }      
+    }
+    
+    public void createMatch(Car car, Person person){    	      
+    	this.CarPersonDict.put(car, person);
+    }
+    
+    public void updateMatch(Car car, Person person){
+    	try{    		
+    		this.CarPersonDict.get(person);
+    		this.CarPersonDict.remove(person);    		
+    		this.CarPersonDict.put(car, person);
+    		
+    	}catch(NullPointerException exception){
+    		this.CarPersonDict.put(car, person);    		
+    	}
+    }
+    
+    public void RemoveMatch(Person person){
+    	try{    		
+    		this.CarPersonDict.get(person);
+    		this.CarPersonDict.remove(person);
+    		
+    	}catch(NullPointerException exception){    		    		    	
+    	}
+    }
     
     /*
      * Public methods - visible fields. 
@@ -112,7 +140,7 @@ public class StorageService {
 		fields.add("model");
 		fields.add("yop");		
 		
-		return fields;				
+		return fields;
 	}
 	
 	public List<String> getPersonVisibleFields(){
@@ -123,7 +151,7 @@ public class StorageService {
 		fields.add("lastName");
 		fields.add("birthYear");		
 		
-		return fields;				
+		return fields;
 	}
 	
 	public List<String> getNoteVisibleFields(){
@@ -133,7 +161,7 @@ public class StorageService {
 		fields.add("content");
 		fields.add("lastModificationDate");
 		
-		return fields;				
+		return fields;
 	}
 
 	

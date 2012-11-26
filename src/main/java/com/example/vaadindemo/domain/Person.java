@@ -8,7 +8,6 @@ public class Person {
 	private String firstName = "unknown first name";
 	private String lastName = "unknown last name";
 	private int birthYear = 1980;
-	private Car car = null;
 
 	/*
 	 * Constructors.
@@ -16,12 +15,11 @@ public class Person {
 	public Person() {
 	}
 
-	public Person(String firstName, String lastName, int birthYear, Car car) {
+	public Person(String firstName, String lastName, int birthYear) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.birthYear = birthYear;
-		this.setCar(car);				
+		this.birthYear = birthYear;		
 	}
 
 	/*
@@ -51,14 +49,6 @@ public class Person {
 		this.birthYear = birthYear;
 	}
 
-	public Car getCar() {
-		return car;
-	}
-
-	public void setCar(Car car) {
-		this.car = car;
-	}
-	
 	/*
 	 * Public methods.
 	 */

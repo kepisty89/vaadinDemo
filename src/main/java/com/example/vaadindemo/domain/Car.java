@@ -1,5 +1,8 @@
 package com.example.vaadindemo.domain;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /*
  * Car model data.
  */
@@ -10,20 +13,27 @@ public class Car {
 	 */	
 	private String make;	// i.e.: Honda
 	private String model;	// i.e.: Civic
-	private int yop;				// Year of production.
+	private Date yop;		// Year of production.
 	
 	/*
-	 * Constructors.
+	 * Constructors.	
 	 */
-	public Car(String make, String model, int yop){
-		this.setMake(make);
-		this.setModel(model);
-		this.setYop(yop);
+	public Car(){		
+		Calendar calendar = Calendar.getInstance();
+	    calendar.set(Calendar.YEAR, 1900);
+	    calendar.set(Calendar.MONTH, 1);
+	    calendar.set(Calendar.DAY_OF_MONTH, 1);
+	    
+	    this.make = "Unknown make";
+	    this.model = "Unknown model";
+	    this.yop = calendar.getTime();
 	}
 	
-	public Car()
-	{		
-		
+	public Car(String make, String model, Date yop){
+		super();
+		this.make = make;
+		this.model = model;
+		this.yop = yop;
 	}
 	
 	/*
@@ -45,21 +55,11 @@ public class Car {
 		this.model = model;
 	}
 
-	public int getYop() {
+	public Date getYop() {
 		return yop;
 	}
 
-	public void setYop(int yop) {
+	public void setYop(Date yop) {
 		this.yop = yop;
-	}
-	
-	/*
-	 * Public methods.
-	 */	
-	public String toString()
-	{
-		return getMake() + " " 
-				+ getModel() 
-				+ " " + getYop();
-	}
+	}	
 }

@@ -1,6 +1,11 @@
 package com.example.vaadindemo;
 
+import java.util.Date;
+
+import utils.DateColumnGenerator;
+
 import com.example.vaadindemo.domain.Car;
+import com.example.vaadindemo.domain.Person;
 import com.example.vaadindemo.factories.CarFormWindowFactory;
 import com.example.vaadindemo.service.StorageService;
 import com.vaadin.Application;
@@ -24,8 +29,22 @@ public class VaadinApp extends Application {
 	
 	private BeanItemContainer<Car> carContainer = new BeanItemContainer<Car>(Car.class);
 	
-	private Table carTable = new Table("Cars", carContainer);		
-	private Button addButton = new Button("Add new car");
+	private Table carTable = new Table("Cars", carContainer);
+//	{
+//		
+//		@Override
+//        protected String formatPropertyValue(Object rowId, Object colId,
+//                Property property) {
+//            Object v = property.getValue();
+//            if (v instanceof Date) {
+//                Date dateValue = (Date) v;
+//                return new SimpleDateFormat("yyyy-MMMM-dd").format(dateValue);
+//            }
+//            return super.formatPropertyValue(rowId, colId, property);
+//        }
+//	};	
+		
+	private Button addButton = new Button("Add new car");	
 	
 	private Window mainWindow = new Window();
 	private Window addCarFormWindow;
@@ -51,22 +70,29 @@ public class VaadinApp extends Application {
 		fillStorageService();
 		updateCarContainer();
 		
-		mainWindow.addComponent(carTable);
+		carTable.setSelectable(true);
+		carTable.setColumnHeader("make", "Make");
+		carTable.setColumnHeader("model", "Model");
+		carTable.setColumnHeader("yop", "Registration date");
+		carTable.addGeneratedColumn("yop", new DateColumnGenerator("dd-MMMM-yyyy"));
 		
 		carTable.addListener(new Table.ValueChangeListener() {
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void valueChange(ValueChangeEvent event) {
 				if (carTable.getValue() != null) {
 					mainWindow.showNotification("" + carTable.getValue());
 				}
 			}
 		});
+		
 		addButton.addListener(new Button.ClickListener() {
 
 			private static final long serialVersionUID = 1L;
 			
+			@Override
 			public void buttonClick(ClickEvent event) {
 
 				if (addCarFormWindow != null) {
@@ -74,13 +100,14 @@ public class VaadinApp extends Application {
 				}
 
 				BeanItem<Car> beanCarItem = new BeanItem<Car>(new Car());
-				CarFormWindowFactory carFormFactory  = new CarFormWindowFactory(beanCarItem, VaadinApp.this);
+				CarFormWindowFactory carFormFactory = new CarFormWindowFactory(beanCarItem, VaadinApp.this);
 
 				addCarFormWindow = carFormFactory.createWindow();
 				mainWindow.addWindow(addCarFormWindow);
 			}
 		});
 		
+		mainWindow.addComponent(carTable);	
 		mainWindow.addComponent(addButton);
 		setMainWindow(mainWindow);
 	}
@@ -102,23 +129,20 @@ public class VaadinApp extends Application {
 	 */
 	private void fillStorageService(){
 		
-		Car car1 = new Car();		
-		car1.setMake("Fiat");
-		car1.setModel("Punto");
-		car1.setYop(1999);		
-
-		Car car2 = new Car();		
-		car2.setMake("Ford");
-		car2.setModel("Mondeo");
-		car2.setYop(2004);		
+		Car car1 = new Car("Fiat", "Punto", new Date());				
+		Car car2 = new Car("Ford", "Mondeo", new Date());				
+		Car car3 = new Car("Nissan", "Quashkai", new Date());				
+		Car car4 = new Car("Honda", "Civic", new Date());
 		
-		Car car3 = new Car();
-		car3.setMake("Syrena");
-		car3.setModel("105");
-		car3.setYop(1945);
+		Person person1 = new Person("Lukasz", "Kepinski", 1989);
+		
 		
 		storageService.addCar(car1);
 		storageService.addCar(car2);
 		storageService.addCar(car3);
+		
+		storageService.addPerson(person1);
+		
+		storageService.createMatch(car4, person1);		
 	}	
 }
