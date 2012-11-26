@@ -30,19 +30,6 @@ public class VaadinApp extends Application {
 	private BeanItemContainer<Car> carContainer = new BeanItemContainer<Car>(Car.class);
 	
 	private Table carTable = new Table("Cars", carContainer);
-//	{
-//		
-//		@Override
-//        protected String formatPropertyValue(Object rowId, Object colId,
-//                Property property) {
-//            Object v = property.getValue();
-//            if (v instanceof Date) {
-//                Date dateValue = (Date) v;
-//                return new SimpleDateFormat("yyyy-MMMM-dd").format(dateValue);
-//            }
-//            return super.formatPropertyValue(rowId, colId, property);
-//        }
-//	};	
 		
 	private Button addButton = new Button("Add new car");	
 	
@@ -71,6 +58,8 @@ public class VaadinApp extends Application {
 		updateCarContainer();
 		
 		carTable.setSelectable(true);
+		carTable.setHeight("600px");
+		carTable.setWidth("400px");
 		carTable.setColumnHeader("make", "Make");
 		carTable.setColumnHeader("model", "Model");
 		carTable.setColumnHeader("yop", "Registration date");
