@@ -2,6 +2,7 @@ package com.example.vaadindemo.factories;
 
 import com.example.vaadindemo.VaadinApp;
 import com.example.vaadindemo.domain.Car;
+import com.example.vaadindemo.domain.Note;
 import com.example.vaadindemo.domain.Person;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
@@ -57,6 +58,7 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 	// Additional buttons.	
 	Button saveButton = new Button("Save");
 	Button exitButton = new Button("Cancel");
+	final RichTextArea richTextArea = new RichTextArea("Notes:");
 	final TabSheet tabSheet = new TabSheet();
 	
 	/*
@@ -207,10 +209,10 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
         // Notes tab content.
         VerticalLayout l3 = new VerticalLayout();
         l3.setMargin(true);
-        
-        RichTextArea richTextArea = new RichTextArea("Notes:");
+                
         richTextArea.setHeight("210px");
         richTextArea.setWidth("220px");        
+        richTextArea.setValue(this.getCarNote().getContent());
         
         l3.addComponent(richTextArea);
         l3.setComponentAlignment(richTextArea, Alignment.MIDDLE_CENTER);
@@ -256,7 +258,8 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 		return this.window;
 	}
 
-	public void saveButtonAction(ClickEvent event){		
+	public void saveButtonAction(ClickEvent event){
+		
 		this.vaadinApp.getStorageService().updateCar(this.carBeanItem.getBean());
 		
 		Boolean hasOwner = (Boolean)this.getField("hasOwner").getValue();
@@ -265,9 +268,11 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 			Person owner = this.pfwf.getBeanItem().getBean();
 			this.vaadinApp.getStorageService().updatePerson(owner);
 			
-			this.vaadinApp.getStorageService().updateMatchKey(this.oldCarBeanItem.getBean(), this.carBeanItem.getBean());
-			this.vaadinApp.getStorageService().updateMatch(this.carBeanItem.getBean(), owner);
+			this.vaadinApp.getStorageService().updateCarPersonMatchKey(this.oldCarBeanItem.getBean(), this.carBeanItem.getBean());
+			this.vaadinApp.getStorageService().updatePersonMatch(this.carBeanItem.getBean(), owner);
 		}
+		
+		this.saveNote();
 		
 		commit();		
 		this.closeFormWindow();		
@@ -290,5 +295,27 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 	private void closeFormWindow(){
 		Window mainWindow = window.getParent();
 		mainWindow.removeWindow(window);
+	}
+	
+	private void saveNote(){
+		
+		Note note = new Note(this.richTextArea.getValue().toString());
+		
+		this.vaadinApp.getStorageService().updateNote(note);
+		
+		this.vaadinApp.getStorageService().updateCarNoteMatchKey(this.oldCarBeanItem.getBean(), this.carBeanItem.getBean());
+		this.vaadinApp.getStorageService().updateNoteMatch(this.carBeanItem.getBean(), note);
+		
+	}
+	
+	private Note getCarNote(){
+		
+		Note note = this.vaadinApp.getStorageService().getNoteMatchFor(this.carBeanItem.getBean());
+		
+		if(note == null){
+			note = new Note("");
+		}
+		
+		return note;
 	}
 }

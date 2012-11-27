@@ -164,9 +164,9 @@ public class VaadinApp extends Application {
 		storageService.addPerson(person2);
 		storageService.addPerson(person3);
 		
-		storageService.updateMatch(car4, person1);
-		storageService.updateMatch(car5, person2);
-		storageService.updateMatch(car7, person3);
+		storageService.updatePersonMatch(car4, person1);
+		storageService.updatePersonMatch(car5, person2);
+		storageService.updatePersonMatch(car7, person3);
 	}	
 	
 	// Listeners.

@@ -9,8 +9,8 @@ public class Note {
 	/*
 	 * Fields.
 	 */
-	private String content;
-	private Date lastModificationDate;
+	private String content = "";
+	private Date lastModificationDate = new Date();
 	
 	/*
 	 * Constructor.

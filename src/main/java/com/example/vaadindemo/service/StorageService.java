@@ -20,6 +20,8 @@ public class StorageService {
 	
 	private Map<Car, Person> CarPersonDict = new HashMap<Car, Person>();
 	
+	private Map<Car, Note> CarNoteDict = new HashMap<Car, Note>();
+	
 	private List<String> currentCarModels = new ArrayList<String>();
 	
 	/*
@@ -97,8 +99,11 @@ public class StorageService {
 
 			if(n.equals(note)){
 				n = note;
+				return;
 			}			
 		}
+		
+		this.noteDb.add(note);
 	}
     
     public void deleteNote(Car car){
@@ -112,7 +117,10 @@ public class StorageService {
     	return this.carDb;
     }   
     
-    public void updateMatch(Car car, Person person){    	
+    /*
+     * Public methods for HashMaps.
+     */
+    public void updatePersonMatch(Car car, Person person){    	
     	
     	if(this.CarPersonDict.get(car) != null){
     		this.CarPersonDict.remove(car);    		
@@ -122,7 +130,7 @@ public class StorageService {
     	}
     }
     
-    public void updateMatchKey(Car oldCar, Car newCar){
+    public void updateCarPersonMatchKey(Car oldCar, Car newCar){
     	if(this.CarPersonDict.get(oldCar) != null){
     		Person removedPerson = this.CarPersonDict.remove(oldCar);    		    		
     		this.CarPersonDict.put(newCar, removedPerson);    		
@@ -139,7 +147,37 @@ public class StorageService {
     public Person getPersonMatchFor(Car car){    	
 		
     	Person owner = this.CarPersonDict.get(car);    		
-		return owner;    		    	
+		return owner;
+    }
+    
+public void updateNoteMatch(Car car, Note note){    	
+    	
+    	if(this.CarNoteDict.get(car) != null){
+    		this.CarNoteDict.remove(car);    		
+    		this.CarNoteDict.put(car, note);    		
+    	}else{
+    		this.CarNoteDict.put(car, note);    		
+    	}
+    }
+    
+    public void updateCarNoteMatchKey(Car oldCar, Car newCar){
+    	if(this.CarNoteDict.get(oldCar) != null){
+    		Note removedNote = this.CarNoteDict.remove(oldCar);    		    		
+    		this.CarNoteDict.put(newCar, removedNote);    		
+    	}
+    }
+    
+    public void RemoveMatch(Note note){    	
+		
+    	if(this.CarNoteDict.get(note) != null){
+			this.CarNoteDict.remove(note);	
+		}    		
+    }    
+    
+    public Note getNoteMatchFor(Car car){    			    
+    	
+    	Note note = this.CarNoteDict.get(car);
+		return note;
     }
     
     /*
