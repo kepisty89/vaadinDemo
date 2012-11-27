@@ -2,10 +2,9 @@ package com.example.vaadindemo.factories;
 
 import com.example.vaadindemo.VaadinApp;
 import com.example.vaadindemo.domain.Person;
+import com.example.vaadindemo.utils.IntegerRangeValidator;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
@@ -21,9 +20,6 @@ public class PersonFormWindowFactory extends Form implements FormFieldFactory {
 	 */
 	VaadinApp vaadinApp;
 	BeanItem<Person> beanItem;
-	
-	// Additional buttons.
-	Button clearButton = new Button("Clear");	
 	
 	/*
 	 * Constructor.
@@ -48,13 +44,7 @@ public class PersonFormWindowFactory extends Form implements FormFieldFactory {
 		setItemDataSource(beanItem);
 		
 		// 3. Set form fields exactly the same as visible fields.
-		setVisibleItemProperties(this.vaadinApp.getStorageService().getPersonVisibleFields());
-		
-		// Bind buttons with actions.
-		clearButton.addListener(ClickEvent.class, this, "clearButtonAction");		
-		
-		// Add components to layout.
-		gridLayout.addComponent(clearButton, 0, 3);			
+		setVisibleItemProperties(this.vaadinApp.getStorageService().getPersonVisibleFields());			
 	}
 	
 	/*
@@ -85,32 +75,27 @@ public class PersonFormWindowFactory extends Form implements FormFieldFactory {
 		String propertyName = (String) propertyId;
 		
 		if (propertyName.equals("firstName")) {						
-			TextField nameField = new TextField("First name");			
+			TextField nameField = new TextField("First name");
+			nameField.setInputPrompt("First name...");			
 			return nameField;
 		} 
 		else 
 		if (propertyName.equals("lastName")) {			
-			TextField lastNameField = new TextField("Last name");		
+			TextField lastNameField = new TextField("Last name");
+			lastNameField.setInputPrompt("Last name...");
 			return lastNameField;			
 		} 
 		else
 		if (propertyName.equals("birthYear")) {
 			TextField birthField = new TextField("Birth year");
+			birthField.setInputPrompt("1990");
+			birthField.addValidator(new IntegerRangeValidator(1900, 2012, "Birth year must be a number ("+ 1900 + " - " + 2012 + ")."));
 	        return birthField;
 		}
 		
 		return null;
 	}
 
-	public void clearButtonAction(ClickEvent event){		
-		
-		GridLayout layout = (GridLayout) getLayout();
-		
-		((TextField)layout.getComponent(0, 0)).setValue("");
-		((TextField)layout.getComponent(0, 1)).setValue("");
-		((TextField)layout.getComponent(0, 2)).setValue("");		
-	}
-	
 	public BeanItem<Person> getBeanItem(){
 		return this.beanItem;
 	}

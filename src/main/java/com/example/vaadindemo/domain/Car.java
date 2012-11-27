@@ -25,8 +25,8 @@ public class Car {
 	    calendar.set(Calendar.MONTH, 1);
 	    calendar.set(Calendar.DAY_OF_MONTH, 1);
 	    
-	    this.make = "Unknown make";
-	    this.model = "Unknown model";
+	    this.make = "Unknown";
+	    this.model = "Unknown";
 	    this.yop = calendar.getTime();
 	    this.hasOwner = false;
 	}

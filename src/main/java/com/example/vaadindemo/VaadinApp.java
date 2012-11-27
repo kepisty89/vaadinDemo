@@ -9,15 +9,18 @@ import com.example.vaadindemo.domain.Car;
 import com.example.vaadindemo.domain.Person;
 import com.example.vaadindemo.factories.CarFormWindowFactory;
 import com.example.vaadindemo.service.StorageService;
+import com.example.vaadindemo.utils.CheckboxColumnGenerator;
 import com.example.vaadindemo.utils.DateColumnGenerator;
 import com.vaadin.Application;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 
@@ -73,12 +76,14 @@ public class VaadinApp extends Application {
 		carTable.setColumnHeader("make", "Make");
 		carTable.setColumnHeader("model", "Model");
 		carTable.setColumnHeader("yop", "Registration date");
-		carTable.addGeneratedColumn("yop", new DateColumnGenerator("dd-MMMM-yyyy"));			
+		carTable.setColumnHeader("hasOwner", "Owner registered");
+		carTable.addGeneratedColumn("yop", new DateColumnGenerator("dd-MMMM-yyyy"));
+		carTable.addGeneratedColumn("hasOwner", new CheckboxColumnGenerator());
 		
 		// Person table settings.
 		personTable.setSelectable(true);
 		personTable.setHeight("600px");
-		personTable.setWidth("400px");
+		personTable.setWidth("400px");		
 		personTable.setColumnHeader("firstName", "Name");
 		personTable.setColumnHeader("lastName", "Last name");
 		personTable.setColumnHeader("birthYear", "Year of birth");		
@@ -91,6 +96,7 @@ public class VaadinApp extends Application {
 		// Main window layout settings.
 		HorizontalLayout tablesLayout = new HorizontalLayout();
 		HorizontalLayout buttonsLayout = new HorizontalLayout();
+		VerticalLayout windowLayout = new VerticalLayout();		
 		
 		tablesLayout.setSpacing(true);
 		tablesLayout.addComponent(carTable);
@@ -101,9 +107,14 @@ public class VaadinApp extends Application {
 		buttonsLayout.addComponent(addButton);
 		buttonsLayout.addComponent(editButton);
 		buttonsLayout.addComponent(removeButton);
+				
+		windowLayout.addComponent(tablesLayout);
+		windowLayout.addComponent(buttonsLayout);
 		
-		mainWindow.addComponent(tablesLayout);
-		mainWindow.addComponent(buttonsLayout);
+		windowLayout.setComponentAlignment(tablesLayout, Alignment.MIDDLE_CENTER);		
+		windowLayout.setComponentAlignment(buttonsLayout, Alignment.MIDDLE_CENTER);
+		
+		mainWindow.addComponent(windowLayout);
 		
 		setMainWindow(mainWindow);
 	}
@@ -132,18 +143,30 @@ public class VaadinApp extends Application {
 		Car car1 = new Car("Fiat", "Punto", new Date(), false);
 		Car car2 = new Car("Ford", "Mondeo", new Date(), false);				
 		Car car3 = new Car("Nissan", "Quashkai", new Date(), false);				
-		Car car4 = new Car("Honda", "Civic", new Date(), true);
+		Car car4 = new Car("Honda", "Civic VIII", new Date(), true);
+		Car car5 = new Car("Nissan", "Micra", new Date(), true);
+		Car car6 = new Car("Toyota", "Corolla", new Date(), false);
+		Car car7 = new Car("Peugeot", "308", new Date(), true);
 		
-		Person person1 = new Person("Lukasz", "Kepinski", 1989);
+		Person person1 = new Person("Jacek", "Krajewski", 1987);
+		Person person2 = new Person("Jan", "Kowalski", 1985);
+		Person person3 = new Person("Adam", "Jabłko", 1968);
 				
 		storageService.addCar(car1);
 		storageService.addCar(car2);
 		storageService.addCar(car3);
 		storageService.addCar(car4);
+		storageService.addCar(car5);
+		storageService.addCar(car6);
+		storageService.addCar(car7);
 		
 		storageService.addPerson(person1);
+		storageService.addPerson(person2);
+		storageService.addPerson(person3);
 		
-		storageService.updateMatch(car4, person1);		
+		storageService.updateMatch(car4, person1);
+		storageService.updateMatch(car5, person2);
+		storageService.updateMatch(car7, person3);
 	}	
 	
 	// Listeners.

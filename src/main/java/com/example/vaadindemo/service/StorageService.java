@@ -19,7 +19,9 @@ public class StorageService {
 	private List<Note> noteDb = new ArrayList<Note>();
 	
 	private Map<Car, Person> CarPersonDict = new HashMap<Car, Person>();
-
+	
+	private List<String> currentCarModels = new ArrayList<String>();
+	
 	/*
 	 * Public methods for Person.
 	 */
@@ -174,6 +176,17 @@ public class StorageService {
 		fields.add("lastModificationDate");
 		
 		return fields;
+	}
+
+	/*
+	 * Car models - needed for model suggestions.
+	 */
+	public List<String> getCurrentCarModels() {
+		return currentCarModels;
+	}
+
+	public void addNewModel(String carModel) {
+		this.currentCarModels.add(carModel);
 	}
 
 	

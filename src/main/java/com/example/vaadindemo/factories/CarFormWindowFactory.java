@@ -5,8 +5,10 @@ import com.example.vaadindemo.domain.Car;
 import com.example.vaadindemo.domain.Person;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -18,7 +20,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -89,7 +90,7 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 		
 		// Bind buttons with actions.
 		exitButton.addListener(ClickEvent.class, this, "exitButtonAction");
-		saveButton.addListener(ClickEvent.class, this, "saveButtonAction");						
+		saveButton.addListener(ClickEvent.class, this, "saveButtonAction");			
 	}
 	
 	/*
@@ -115,7 +116,7 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 		else
 		if(propertyName.equals("hasOwner")){
 			layout.addComponent(field, 0,3);
-		}
+		}			
 	}
 	
 	@Override
@@ -128,23 +129,40 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 			final ComboBox makeComboBox = new ComboBox("Choose make");
 			makeComboBox.setInputPrompt("Start typing");
 			makeComboBox.setNewItemsAllowed(true);
+			makeComboBox.setRequired(true);
 
 			for(String make : MAKES) {
 				makeComboBox.addItem(make);
 			}
-			
-			// Simple validation.
-			makeComboBox.setRequired(true);
 			
 			return makeComboBox;
 		} 
 		else 
 		if (propertyName.equals("model")) {
 			
-			final TextField textField = new TextField("Type model");
-			textField.setInputPrompt("Car model");
+			final ComboBox modelComboBox = new ComboBox("Type model");								
+			modelComboBox.setInputPrompt("Car model");
+			modelComboBox.setRequired(true);
+			modelComboBox.setNewItemsAllowed(true);
+			modelComboBox.setNewItemHandler(new NewItemHandler() {
+				
+				private static final long serialVersionUID = 1L;
+				
+				@Override
+				public void addNewItem(String newItemCaption) {									       				       
+			        modelComboBox.addItem(newItemCaption);
+			        modelComboBox.setItemCaption(newItemCaption, newItemCaption);
+			        modelComboBox.select(newItemCaption);
+										
+					vaadinApp.getStorageService().addNewModel(newItemCaption);
+				}				
+			});
 			
-			return textField;			
+			for(String model : this.vaadinApp.getStorageService().getCurrentCarModels()) {
+				modelComboBox.addItem(model);
+			}
+			
+			return modelComboBox;
 		} 
 		else
 		if (propertyName.equals("yop")) {
@@ -154,6 +172,7 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 			popupDate.setInputPrompt("Registration date");
 			popupDate.setResolution(PopupDateField.RESOLUTION_DAY);
 	        popupDate.setImmediate(true);
+	        popupDate.setRequired(true);
 	        
 	        return popupDate;
 		}
@@ -176,12 +195,14 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 		// Car tab content.
         VerticalLayout l1 = new VerticalLayout();
         l1.setMargin(true);
-        l1.addComponent(this);        
+        l1.addComponent(this);
+        l1.setComponentAlignment(this, Alignment.MIDDLE_CENTER);
         
         // Person tab content.
         VerticalLayout l2 = new VerticalLayout();
         l2.setMargin(true);                       
         l2.addComponent(pfwf);
+        l2.setComponentAlignment(pfwf, Alignment.MIDDLE_CENTER);
         
         // Notes tab content.
         VerticalLayout l3 = new VerticalLayout();
@@ -192,17 +213,17 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
         richTextArea.setWidth("220px");        
         
         l3.addComponent(richTextArea);
+        l3.setComponentAlignment(richTextArea, Alignment.MIDDLE_CENTER);
 
         // TabSheet itself.                
         tabSheet.setImmediate(true);
         tabSheet.setHeight("300px");
         tabSheet.setWidth("300px");
-
+        
         tabSheet.addTab(l1, "Car data");
         tabSheet.addTab(l2, "Owner data");
         tabSheet.addTab(l3, "Additional notes");
-        tabSheet.getTab(1).setEnabled(this.carBeanItem.getBean().getHasOwner());
-        // tabSheet.addListener();
+        tabSheet.getTab(1).setEnabled(this.carBeanItem.getBean().getHasOwner());               
 		
 		this.window = new Window();
 		
@@ -219,6 +240,7 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 		VerticalLayout windowLayout = new VerticalLayout();
 		windowLayout.addComponent(tabSheet);
 		windowLayout.addComponent(buttonsLayout);
+		windowLayout.setComponentAlignment(buttonsLayout, Alignment.MIDDLE_CENTER);
 		
 		// Window settings.
 		this.window.setModal(true);
@@ -247,7 +269,7 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 			this.vaadinApp.getStorageService().updateMatch(this.carBeanItem.getBean(), owner);
 		}
 		
-		commit();
+		commit();		
 		this.closeFormWindow();		
 		this.vaadinApp.updateContainers();
 	}

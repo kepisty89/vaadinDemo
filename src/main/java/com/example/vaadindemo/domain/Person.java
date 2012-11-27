@@ -5,9 +5,9 @@ public class Person {
 	/*
 	 * Fields.
 	 */
-	private String firstName = "unknown first name";
-	private String lastName = "unknown last name";
-	private int birthYear = 1980;
+	private String firstName = "Unknown";
+	private String lastName = "Unknown";
+	private int birthYear = 1900;
 
 	/*
 	 * Constructors.
