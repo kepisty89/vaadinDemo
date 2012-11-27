@@ -1,9 +1,9 @@
 package com.example.vaadindemo.service;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.vaadindemo.domain.Car;
 import com.example.vaadindemo.domain.Note;
@@ -18,7 +18,7 @@ public class StorageService {
 	private List<Car> carDb = new ArrayList<Car>();
 	private List<Note> noteDb = new ArrayList<Note>();
 	
-	private Dictionary<Car, Person> CarPersonDict = new Hashtable<Car, Person>();
+	private Map<Car, Person> CarPersonDict = new HashMap<Car, Person>();
 
 	/*
 	 * Public methods for Person.
@@ -33,8 +33,11 @@ public class StorageService {
 
 			if(p.equals(person)){
 				p = person;
+				return;
 			}			
 		}
+		
+		this.personDb.add(person);
 	}
 
     public void deletePerson(Person person){
@@ -47,8 +50,7 @@ public class StorageService {
     public List<Person> getAllPersons(){
     	return this.personDb;
     }
-          
-    
+              
 	/*
 	 * Public methods for Car.
 	 */
@@ -56,14 +58,17 @@ public class StorageService {
     	this.carDb.add(car);
     }
     
-    public void updateCar(Car car){
-    	
-		for (Car c : this.carDb) {
+    public void updateCar(Car car){    	    
+		
+    	for (Car c : this.carDb) {
 
 			if(c.equals(car)){
 				c = car;
-			}			
+				return;
+			}
 		}
+		
+		this.carDb.add(car);
 	}
     
     public void deleteCar(Car car){
@@ -103,30 +108,36 @@ public class StorageService {
 
     public List<Car> getAllNotes(){
     	return this.carDb;
-    }
+    }   
     
-    public void createMatch(Car car, Person person){    	      
-    	this.CarPersonDict.put(car, person);
-    }
-    
-    public void updateMatch(Car car, Person person){
-    	try{    		
-    		this.CarPersonDict.get(person);
-    		this.CarPersonDict.remove(person);    		
-    		this.CarPersonDict.put(car, person);
-    		
-    	}catch(NullPointerException exception){
+    public void updateMatch(Car car, Person person){    	
+    	
+    	if(this.CarPersonDict.get(car) != null){
+    		this.CarPersonDict.remove(car);    		
+    		this.CarPersonDict.put(car, person);    		
+    	}else{
     		this.CarPersonDict.put(car, person);    		
     	}
     }
     
-    public void RemoveMatch(Person person){
-    	try{    		
-    		this.CarPersonDict.get(person);
-    		this.CarPersonDict.remove(person);
-    		
-    	}catch(NullPointerException exception){    		    		    	
+    public void updateMatchKey(Car oldCar, Car newCar){
+    	if(this.CarPersonDict.get(oldCar) != null){
+    		Person removedPerson = this.CarPersonDict.remove(oldCar);    		    		
+    		this.CarPersonDict.put(newCar, removedPerson);    		
     	}
+    }
+    
+    public void RemoveMatch(Person person){    	
+		
+    	if(this.CarPersonDict.get(person) != null){
+			this.CarPersonDict.remove(person);	
+		}    		
+    }    
+    
+    public Person getPersonMatchFor(Car car){    	
+		
+    	Person owner = this.CarPersonDict.get(car);    		
+		return owner;    		    	
     }
     
     /*
@@ -139,6 +150,7 @@ public class StorageService {
 		fields.add("make");
 		fields.add("model");
 		fields.add("yop");		
+		fields.add("hasOwner");
 		
 		return fields;
 	}

@@ -11,9 +11,10 @@ public class Car {
 	/*
 	 * Fields.
 	 */	
-	private String make;	// i.e.: Honda
-	private String model;	// i.e.: Civic
-	private Date yop;		// Year of production.
+	private String make;		// i.e.: Honda
+	private String model;		// i.e.: Civic
+	private Date yop;			// Year of production.
+	private Boolean hasOwner;	// Value identicating whether car has owner.
 	
 	/*
 	 * Constructors.	
@@ -27,13 +28,15 @@ public class Car {
 	    this.make = "Unknown make";
 	    this.model = "Unknown model";
 	    this.yop = calendar.getTime();
+	    this.hasOwner = false;
 	}
 	
-	public Car(String make, String model, Date yop){
+	public Car(String make, String model, Date yop, Boolean hasOwner){
 		super();
 		this.make = make;
 		this.model = model;
 		this.yop = yop;
+		this.hasOwner = hasOwner;
 	}
 	
 	/*
@@ -61,5 +64,13 @@ public class Car {
 
 	public void setYop(Date yop) {
 		this.yop = yop;
-	}	
+	}
+
+	public Boolean getHasOwner() {
+		return hasOwner;
+	}
+
+	public void setHasOwner(Boolean hasOwner) {
+		this.hasOwner = hasOwner;
+	}
 }
