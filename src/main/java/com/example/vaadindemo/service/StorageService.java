@@ -115,7 +115,7 @@ public class StorageService {
 
     public List<Car> getAllNotes(){
     	return this.carDb;
-    }   
+    }
     
     /*
      * Public methods for HashMaps.
@@ -137,11 +137,11 @@ public class StorageService {
     	}
     }
     
-    public void RemoveMatch(Person person){    	
+    public void removePersonMatch(Car car){    	
 		
-    	if(this.CarPersonDict.get(person) != null){
-			this.CarPersonDict.remove(person);	
-		}    		
+    	if(this.CarPersonDict.get(car) != null){    		
+    		this.deletePerson(this.CarPersonDict.remove(car));	
+		}    	    
     }    
     
     public Person getPersonMatchFor(Car car){    	
@@ -167,10 +167,10 @@ public void updateNoteMatch(Car car, Note note){
     	}
     }
     
-    public void RemoveMatch(Note note){    	
+    public void removeNoteMatch(Car car){    	
 		
-    	if(this.CarNoteDict.get(note) != null){
-			this.CarNoteDict.remove(note);	
+    	if(this.CarNoteDict.get(car) != null){
+			this.CarNoteDict.remove(car);	
 		}    		
     }    
     

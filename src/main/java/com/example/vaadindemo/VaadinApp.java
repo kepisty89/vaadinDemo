@@ -15,10 +15,14 @@ import com.vaadin.Application;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -35,11 +39,11 @@ public class VaadinApp extends Application {
 	private StorageService storageService;
 	
 	private BeanItemContainer<Car> carContainer = new BeanItemContainer<Car>(Car.class);
-	private BeanItemContainer<Person> personContainer = new BeanItemContainer<Person>(Person.class);
+	private BeanItemContainer<Person> personContainer = new BeanItemContainer<Person>(Person.class);	
 	
 	private final Table carTable = new Table("Cars", carContainer);
-	private final Table personTable = new Table("People", personContainer);
-		
+	private final Table personTable = new Table("People", personContainer);	
+	
 	private Button addButton = new Button("Add new car");	
 	private Button editButton = new Button("Edit selected car");
 	private Button removeButton = new Button("Remove selected car");
@@ -67,7 +71,7 @@ public class VaadinApp extends Application {
 		
 		// Fake database methods.
 		fillStorageService();
-		updateContainers();
+		updateContainers();		
 		
 		// Car table settings.
 		carTable.setSelectable(true);
@@ -79,6 +83,12 @@ public class VaadinApp extends Application {
 		carTable.setColumnHeader("hasOwner", "Owner registered");
 		carTable.addGeneratedColumn("yop", new DateColumnGenerator("dd-MMMM-yyyy"));
 		carTable.addGeneratedColumn("hasOwner", new CheckboxColumnGenerator());
+		carTable.setColumnWidth("yop", 102);
+		carTable.setColumnWidth("hasOwner", 105);
+		
+		// Set columns order.
+		Object[] carColumns = new Object[]{"make", "model", "yop", "hasOwner"};		
+		carTable.setVisibleColumns(carColumns);			
 		
 		// Person table settings.
 		personTable.setSelectable(true);
@@ -86,12 +96,21 @@ public class VaadinApp extends Application {
 		personTable.setWidth("400px");		
 		personTable.setColumnHeader("firstName", "Name");
 		personTable.setColumnHeader("lastName", "Last name");
-		personTable.setColumnHeader("birthYear", "Year of birth");		
+		personTable.setColumnHeader("birthYear", "Year of birth");
+		personTable.setColumnWidth("birthYear", 90);
+		
+		// Set columns order.
+		Object[] personColumns = new Object[]{"firstName", "lastName", "birthYear"};		
+		personTable.setVisibleColumns(personColumns);
 		
 		// Buttons logic.
 		addButton.addListener(getAddButtonListener());		
 		editButton.addListener(getEditButtonListener());		
 		removeButton.addListener(getRemoveButtonListener());
+		
+		addButton.setIcon(new ThemeResource("../runo/icons/16/document-add.png"));
+		editButton.setIcon(new ThemeResource("../runo/icons/16/document.png"));
+		removeButton.setIcon(new ThemeResource("../runo/icons/16/document-delete.png"));
 		
 		// Main window layout settings.
 		HorizontalLayout tablesLayout = new HorizontalLayout();
@@ -106,13 +125,20 @@ public class VaadinApp extends Application {
 		buttonsLayout.setMargin(true);
 		buttonsLayout.addComponent(addButton);
 		buttonsLayout.addComponent(editButton);
-		buttonsLayout.addComponent(removeButton);
-				
+		buttonsLayout.addComponent(removeButton);						
+		
+		windowLayout.setSpacing(true);
+		windowLayout.setMargin(true);		
+		
+		Embedded logoImage = new Embedded("", new ExternalResource("http://www.enterprisecarshare.com/themes/ecs/img/slide-2.png.pagespeed.ce.Qm3lFWoKAm.png"));		
+		
+		windowLayout.addComponent(logoImage);
 		windowLayout.addComponent(tablesLayout);
 		windowLayout.addComponent(buttonsLayout);
-		
-		windowLayout.setComponentAlignment(tablesLayout, Alignment.MIDDLE_CENTER);		
-		windowLayout.setComponentAlignment(buttonsLayout, Alignment.MIDDLE_CENTER);
+				
+		windowLayout.setComponentAlignment(logoImage, Alignment.TOP_CENTER);
+		windowLayout.setComponentAlignment(tablesLayout, Alignment.TOP_CENTER);		
+		windowLayout.setComponentAlignment(buttonsLayout, Alignment.TOP_CENTER);
 		
 		mainWindow.addComponent(windowLayout);
 		
@@ -222,7 +248,7 @@ public class VaadinApp extends Application {
 					}
 					
 					addCarFormWindow = carFormFactory.createWindow("You are editting car - " 
-					+ carToEdit.getMake() + " " + carToEdit.getModel() + " " + new SimpleDateFormat("mm/yyyy").format(carToEdit.getYop()).toString());
+					+ carToEdit.getMake() + " " + carToEdit.getModel() + "   " + new SimpleDateFormat("MM/yyyy").format(carToEdit.getYop()).toString());
 					mainWindow.addWindow(addCarFormWindow);				
 				}else{
 					mainWindow.showNotification("Select car to edit!");
@@ -246,7 +272,7 @@ public class VaadinApp extends Application {
 					// Remove owner if exist.
 					if (carToRemove.getHasOwner()){
 						Person owner = storageService.getPersonMatchFor(carToRemove);
-						storageService.RemoveMatch(owner);
+						storageService.removePersonMatch(carToRemove);
 						storageService.deleteCar(carToRemove);
 						storageService.deletePerson(owner);
 					}else{
