@@ -71,11 +71,11 @@ public class VaadinApp extends Application {
 		
 		// Fake database methods.
 		fillStorageService();
-		updateContainers();		
+		updateContainers();
 		
 		// Car table settings.
 		carTable.setSelectable(true);
-		carTable.setHeight("600px");
+		carTable.setHeight("400px");
 		carTable.setWidth("400px");
 		carTable.setColumnHeader("make", "Make");
 		carTable.setColumnHeader("model", "Model");
@@ -87,25 +87,25 @@ public class VaadinApp extends Application {
 		carTable.setColumnWidth("hasOwner", 105);
 		
 		// Set columns order.
-		Object[] carColumns = new Object[]{"make", "model", "yop", "hasOwner"};		
-		carTable.setVisibleColumns(carColumns);			
+		Object[] carColumns = new Object[]{"make", "model", "yop", "hasOwner"};
+		carTable.setVisibleColumns(carColumns);
 		
 		// Person table settings.
 		personTable.setSelectable(true);
-		personTable.setHeight("600px");
-		personTable.setWidth("400px");		
+		personTable.setHeight("400px");
+		personTable.setWidth("400px");
 		personTable.setColumnHeader("firstName", "Name");
 		personTable.setColumnHeader("lastName", "Last name");
 		personTable.setColumnHeader("birthYear", "Year of birth");
 		personTable.setColumnWidth("birthYear", 90);
 		
 		// Set columns order.
-		Object[] personColumns = new Object[]{"firstName", "lastName", "birthYear"};		
+		Object[] personColumns = new Object[]{"firstName", "lastName", "birthYear"};
 		personTable.setVisibleColumns(personColumns);
 		
 		// Buttons logic.
-		addButton.addListener(getAddButtonListener());		
-		editButton.addListener(getEditButtonListener());		
+		addButton.addListener(getAddButtonListener());
+		editButton.addListener(getEditButtonListener());
 		removeButton.addListener(getRemoveButtonListener());
 		
 		addButton.setIcon(new ThemeResource("../runo/icons/16/document-add.png"));

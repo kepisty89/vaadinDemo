@@ -7,6 +7,7 @@ import com.example.vaadindemo.domain.Person;
 import com.example.vaadindemo.utils.CapitalLeterValidator;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.ui.Button;
@@ -15,6 +16,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.FormFieldFactory;
@@ -57,26 +59,34 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 	// Window that will be created.
 	Window window;	
 	
-	// Additional buttons.	
+	// Additional elements.	
 	Button saveButton = new Button("Save");
 	Button exitButton = new Button("Cancel");
+	
+	Embedded personImage = new Embedded("", new ExternalResource("http://www.clker.com/cliparts/c/4/0/e/1197115544208915882acspike_male_user_icon.svg.med.png"));	
+	Embedded carImage = new Embedded("", new ExternalResource("http://www.designresourcebox.com/ths/diverse/iconps/how-to-design-a-detailed-mini-cooper-icon-in-photoshop.jpg"));	
+	
 	final RichTextArea richTextArea = new RichTextArea();
 	final TabSheet tabSheet = new TabSheet();
-	VerticalLayout tabLayout1 = new VerticalLayout();
-	final VerticalLayout tabLayout2 = new VerticalLayout();
+	
+	VerticalLayout horizontalTabLayout1 = new VerticalLayout();
+	VerticalLayout horizontalTabLayout2 = new VerticalLayout();
+	
+	HorizontalLayout tabLayout1 = new HorizontalLayout();
+	HorizontalLayout tabLayout2 = new HorizontalLayout();
 	VerticalLayout tabLayout3 = new VerticalLayout();
 	
 	/*
 	 * Constructor.
 	 */
-	public CarFormWindowFactory(BeanItem<Car> carBeanItem, BeanItem<Person> personBeanItem, VaadinApp vaadinApp){		
+	public CarFormWindowFactory(BeanItem<Car> carBeanItem, BeanItem<Person> personBeanItem, VaadinApp vaadinApp){
 		
 		this.carBeanItem = carBeanItem;
 		this.oldCarBeanItem = carBeanItem;
-		this.personBeanItem = personBeanItem;		
+		this.personBeanItem = personBeanItem;
 		this.vaadinApp = vaadinApp;
 		
-		this.pfwf = new PersonFormWindowFactory(this.personBeanItem, this.vaadinApp);		
+		this.pfwf = new PersonFormWindowFactory(this.personBeanItem, this.vaadinApp);
 		
 		// Create and set form layout.
 		GridLayout gridLayout = new GridLayout(2,5);
@@ -84,7 +94,7 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 		setLayout(gridLayout);
 		
 		setImmediate(true);
-		setValidationVisibleOnCommit(true);		
+		setValidationVisibleOnCommit(true);
 
 		// 1. Set form factory source.
 		setFormFieldFactory(this);
@@ -101,7 +111,11 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 		
 		// Set buttons layout.
 		saveButton.setIcon(new ThemeResource("../runo/icons/16/ok.png"));
-		exitButton.setIcon(new ThemeResource("../runo/icons/16/cancel.png"));		
+		exitButton.setIcon(new ThemeResource("../runo/icons/16/cancel.png"));
+		
+		// Set images width/height.
+		personImage.setWidth("180px");
+		carImage.setWidth("170px");
 	}
 	
 	/*
@@ -210,16 +224,22 @@ public class CarFormWindowFactory extends Form implements FormFieldFactory {
 	public Window createWindow(String caption){
 		
 		// Car tab content.        
-        this.tabLayout1.setMargin(true);
-        this.tabLayout1.addComponent(this);
-        this.tabLayout1.setComponentAlignment(this, Alignment.MIDDLE_RIGHT);    
-        this.tabLayout1.setSpacing(true);
+        this.horizontalTabLayout1.setMargin(true);
+        this.horizontalTabLayout1.addComponent(this);
+        this.horizontalTabLayout1.setComponentAlignment(this, Alignment.MIDDLE_RIGHT);    
+        this.horizontalTabLayout1.setSpacing(true);
         
-        // Person tab content.        
-        this.tabLayout2.setMargin(true);                       
-        this.tabLayout2.addComponent(pfwf);
-        this.tabLayout2.setComponentAlignment(pfwf, Alignment.MIDDLE_RIGHT);           
-        this.tabLayout2.setSpacing(true);
+        this.tabLayout1.addComponent(horizontalTabLayout1);
+        this.tabLayout1.addComponent(carImage);
+        
+        // Person tab content.
+        this.horizontalTabLayout2.setMargin(true);                       
+        this.horizontalTabLayout2.addComponent(pfwf);
+        this.horizontalTabLayout2.setComponentAlignment(pfwf, Alignment.MIDDLE_RIGHT);        
+        this.horizontalTabLayout2.setSpacing(true);
+        
+        this.tabLayout2.addComponent(horizontalTabLayout2);
+        this.tabLayout2.addComponent(personImage);
         
         // Notes tab content.        
         this.tabLayout3.setMargin(true, false, false, false);
